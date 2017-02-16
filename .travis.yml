@@ -1,0 +1,16 @@
+sudo: required
+
+language: go
+
+services:
+  - docker
+
+script:
+  - go get github.com/wadey/gocovmerge
+  - make test
+  - make cover
+
+go:
+  - 1.7
+  - 1.8
+  - tip

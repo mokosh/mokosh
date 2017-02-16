@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package pb;
+
+service Mokosh {
+    // Request all capabilities supported by this instance
+    rpc Capabilities (CapabilitiesRequest) returns (CapabilitiesReply) {}
+    rpc Merge(stream MergePart) returns (MergeResult) {}
+}
+
+enum Capability {
+    MERGE = 0;
+}
+
+// The request message
+message CapabilitiesRequest {
+}
+
+// The response message containing capabilites of this server
+message CapabilitiesReply {
+    repeated Capability capabilities = 1;
+}
+
+
+message MergePart {
+    bytes data = 1; // the pdf payload
+    bool addEmptyIfOdd = 2; // shall we add an empty page if the number of pages are not even
+}
+
+
+message MergeResult {
+    bytes data = 1; // the pdf payload
+    int32 pages = 2; // number of pages
+}
