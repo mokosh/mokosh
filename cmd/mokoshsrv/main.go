@@ -27,7 +27,10 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterMokoshServer(s, mokoshsvc.NewMokoshServer(nil))
+	server := mokoshsvc.NewMokoshService(nil)
+	pb.RegisterMokoshServer(s, server)
+	pb.RegisterMergerServer(s, server)
+
 
 	// Register reflection service on gRPC server.
 	reflection.Register(s)

@@ -2,10 +2,13 @@ syntax = "proto3";
 
 package pb;
 
+service Merger {
+    rpc Merge(stream MergePart) returns (MergeResult) {}
+}
+
 service Mokosh {
     // Request all capabilities supported by this instance
     rpc Capabilities (CapabilitiesRequest) returns (CapabilitiesReply) {}
-    rpc Merge(stream MergePart) returns (MergeResult) {}
 }
 
 enum Capability {

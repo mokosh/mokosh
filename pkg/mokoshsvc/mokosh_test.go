@@ -9,7 +9,7 @@ import (
 )
 
 func TestMokosh_Capabilities(t *testing.T) {
-	capabilities, err := mokoshsvc.NewMokoshServer(nil).Capabilities(nil, &pb.CapabilitiesRequest{})
+	capabilities, err := mokoshsvc.NewMokoshService(nil).Capabilities(nil, &pb.CapabilitiesRequest{})
 	if err != nil {
 		t.Log(err)
 		t.Fail()
@@ -21,7 +21,7 @@ func TestMokosh_Capabilities(t *testing.T) {
 	}
 
 
-	capabilities, err = mokoshsvc.NewMokoshServer(NewMergerMockConfig()).Capabilities(nil, &pb.CapabilitiesRequest{})
+	capabilities, err = mokoshsvc.NewMokoshService(NewMergerMockConfig()).Capabilities(nil, &pb.CapabilitiesRequest{})
 	if err != nil {
 		t.Log(err)
 		t.Fail()
@@ -35,7 +35,7 @@ func TestMokosh_Capabilities(t *testing.T) {
 }
 
 func TestMokosh_Merge(t *testing.T) {
-	err := mokoshsvc.NewMokoshServer(nil).Merge(nil)
+	err := mokoshsvc.NewMokoshService(nil).Merge(nil)
 	t.Logf("received error: %v", err)
 	if err == nil {
 		t.Log("we expect an unconfigured Server to return nil.")

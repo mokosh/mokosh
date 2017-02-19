@@ -10,6 +10,11 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
+type MokoshService interface {
+	Capabilities(context.Context, *pb.CapabilitiesRequest) (*pb.CapabilitiesReply, error)
+	Merge(pb.Merger_MergeServer) error
+}
+
 type MergerConfig struct {
 	ServerUrl string
 }
@@ -23,7 +28,7 @@ func (s *mokosh) Capabilities(ctx context.Context, req *pb.CapabilitiesRequest) 
 	return &pb.CapabilitiesReply{Capabilities: s.capabilities}, nil
 }
 
-func (s *mokosh) Merge(stream pb.Mokosh_MergeServer) error {
+func (s *mokosh) Merge(stream pb.Merger_MergeServer) error {
 
 	return grpc.Errorf(codes.Unimplemented, "We do not yet support merging.")
 	/*
@@ -35,12 +40,12 @@ func (s *mokosh) Merge(stream pb.Mokosh_MergeServer) error {
 	}*/
 }
 
-func (s *mokosh) setMerger (merger *MergerConfig) {
+func (s *mokosh) setMerger(merger *MergerConfig) {
 
 	s.addCapability(pb.Capability_MERGE)
 }
 
-func NewMokoshServer(merger *MergerConfig) pb.MokoshServer {
+func NewMokoshService(merger *MergerConfig) MokoshService {
 	m := mokosh{}
 	if merger != nil {
 		m.setMerger(merger)
@@ -48,8 +53,7 @@ func NewMokoshServer(merger *MergerConfig) pb.MokoshServer {
 	return &m
 }
 
-
-func (s *mokosh) addCapability (capability pb.Capability) {
+func (s *mokosh) addCapability(capability pb.Capability) {
 	// Todo: check for duplicates
 	n := len(s.capabilities)
 	if n == cap(s.capabilities) {
@@ -57,6 +61,6 @@ func (s *mokosh) addCapability (capability pb.Capability) {
 		copy(newSlice, s.capabilities)
 		s.capabilities = newSlice
 	}
-	s.capabilities = s.capabilities[0 : n+1]
+	s.capabilities = s.capabilities[0: n+1]
 	s.capabilities[n] = capability
 }
